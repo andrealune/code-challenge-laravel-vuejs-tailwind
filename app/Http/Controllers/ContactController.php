@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\User;
 use App\Http\Requests\ContactRequest;
-use Illuminate\Http\Request;
+use App\Notifications\NewContactNotification;
 
 class ContactController extends Controller
 {
@@ -19,6 +20,11 @@ class ContactController extends Controller
     {
         $contact = Contact::create($request->all());
 
+        $admin = User::where('role', 'admin')->first();
+        if ($admin) {
+            // TODO Uncomment the blow line to send notification. Make sure you setup environment in .env
+            // $admin->notify(new NewContactNotification());
+        }
         return response()->json($contact, 201);
     }
 
