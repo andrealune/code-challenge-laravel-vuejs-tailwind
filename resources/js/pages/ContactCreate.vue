@@ -19,6 +19,12 @@
                     :value="contact.first_name"
                     @input="handleChange"
                 />
+                <div
+                    v-if="contactError.first_name"
+                    class="text-xs text-red-500"
+                >
+                    {{ contactError.first_name.toString() }}
+                </div>
             </div>
             <div>
                 <div>
@@ -30,6 +36,9 @@
                     :value="contact.last_name"
                     @input="handleChange"
                 />
+                <div v-if="contactError.last_name" class="text-xs text-red-500">
+                    {{ contactError.last_name.toString() }}
+                </div>
             </div>
             <div>
                 <div>
@@ -78,18 +87,23 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const message = ref("");
+const errMessage = ref("");
 const contact = ref({
     first_name: "",
     last_name: "",
     phone: null,
     email: null,
 });
+const contactError = ref({
+    first_name: "",
+    last_name: "",
+});
 const id = route.params.id;
 
 const handleChange = ({ target: { name, value } }) => {
     message.value = "";
     errMessage.value = "";
-
+    contactError.value = {};
     contact.value = {
         ...contact.value,
         [name]: value,
@@ -101,20 +115,22 @@ const handleSave = () => {
         axios
             .patch(`/api/contacts/${id}`, contact.value)
             .then(() => {
+                contactError.value = {};
                 message.value = "Successfully updated";
             })
-            .catch(() => {
-                errMessage.value = "Something went wrong";
+            .catch((error) => {
+                contactError.value = error.response.data.errors;
             });
     } else {
         axios
             .post("/api/contacts", contact.value)
             .then(() => {
                 contact.value = {};
+                contactError.value = {};
                 message.value = "Successfully created";
             })
-            .catch(() => {
-                errMessage.value = "Something went wrong";
+            .catch((error) => {
+                contactError.value = error.response.data.errors;
             });
     }
 };

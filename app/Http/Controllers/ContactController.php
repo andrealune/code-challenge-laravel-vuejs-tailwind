@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Http\Requests\ContactRequest;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -14,7 +15,7 @@ class ContactController extends Controller
         return response()->json($contacts);
     }
 
-    public function store(Request $request)
+    public function store(ContactRequest $request)
     {
         $contact = Contact::create($request->all());
 
@@ -26,7 +27,7 @@ class ContactController extends Controller
         return response()->json($contact);
     }
 
-    public function update(Request $request, Contact $contact)
+    public function update(ContactRequest $request, Contact $contact)
     {
         $contact->update($request->all());
 
