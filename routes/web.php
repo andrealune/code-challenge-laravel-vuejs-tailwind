@@ -28,4 +28,4 @@ Route::get('/contact/create',[ContactController::class,'create'])->name('contact
 Route::post('/contact',[ContactController::class,'store'])->name('contact.store');
 Route::get('/contact/edit/{id}',[ContactController::class,'edit'])->name('contact.edit');
 Route::post('/contact/edit/{id}',[ContactController::class,'update'])->name('contact.update');
-Route::get('/contact/delete/{id}',[ContactController::class,'destroy'])->name('contact.delete');
+Route::get('/contact/delete/{id}',[ContactController::class,'destroy'])->name('contact.delete')->middleware('admin');

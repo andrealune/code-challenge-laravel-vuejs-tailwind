@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddContactRequest;
 use App\Http\Requests\EditContactRequest;
+use App\Mail\NotifyAdmin;
 use App\Models\Contact;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -44,14 +47,23 @@ class ContactController extends Controller
                     'last_name' => $request->last_name,
                     'phone' => $request->phone,
                     'email' => $request->email,
+                    'user_id'=>auth()->user()->id
                 ]
             );
+            $details = [
+                'fname'=>$request->first_name,
+                'lname'=>$request->last_name,
+                'email'=>$request->email,
+                'phone'=>$request->phone,
+            ];
+            $admin = User::where('is_admin',1)->first();
+            Mail::to($admin->email)->send(new NotifyAdmin($details));
 
         } catch (\Exception $exception) {
             flash()->addError('Something Went Wrong. Please Try Again.');
             return back();
         }
-        flash()->addSucess('Contact Added Successfully!!');
+        flash()->addSuccess('Contact Added Successfully!!');
         return redirect()->route('contact.index');
     }
 
@@ -94,6 +106,8 @@ class ContactController extends Controller
                     'last_name' => $request->last_name,
                     'phone' => $request->phone,
                     'email' => $request->email,
+                    'user_id'=>auth()->user()->id
+
                 ]
             );
 
@@ -101,7 +115,7 @@ class ContactController extends Controller
             flash()->addError('Something Went Wrong. Please Try Again.');
             return back();
         }
-        flash()->addSucess('Contact Updated Successfully!!');
+        flash()->addSuccess('Contact Updated Successfully!!');
         return redirect()->route('contact.index');
     }
 
@@ -113,7 +127,6 @@ class ContactController extends Controller
      */
     public function destroy($id)
     {
-        $this->middleware('admin');
         try {
             Contact::destroy($id);
 
