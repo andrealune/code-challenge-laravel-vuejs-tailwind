@@ -36,6 +36,7 @@ class ContactController extends Controller
 
     public function destroy(Contact $contact)
     {
+        $this->authorize('delete', $contact);
         $contact->delete();
 
         return response()->json($contact);

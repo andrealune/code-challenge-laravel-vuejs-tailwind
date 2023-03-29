@@ -8,8 +8,11 @@
                 Create
             </RouterLink>
         </div>
-        <div v-if="errMessage" class="bg-red-400 p-5 text-white">
+        <div v-if="errMessage" class="bg-red-400 p-5 text-white mb-4">
             {{ errMessage }}
+        </div>
+        <div v-if="message" class="bg-green-400 p-5 text-white mb-4">
+            {{ message }}
         </div>
         <table
             class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
@@ -55,6 +58,12 @@
                         </button>
                     </td>
                 </tr>
+                <tr
+                    v-if="!contacts.length"
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                >
+                    <td colspan="5" class="px-6 py-4 text-center">No data</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -65,19 +74,24 @@ import { ref, onMounted } from "vue";
 
 const contacts = ref([]);
 const errMessage = ref("");
+const message = ref("");
 
 const handleDelete = ({ target: { id } }) => {
+    message.value = "";
     axios
         .delete(`api/contacts/${id}`)
-        .then((res) => {
-            const deletedContact = res.data;
+        .then(({ data }) => {
+            const deletedContact = data;
+            errMessage.value = "";
+            message.value = "Successfully deleted";
 
             contacts.value = contacts.value.filter(
                 (contact) => contact.id !== deletedContact.id
             );
         })
         .catch(() => {
-            errMessage.value = "Can't delete";
+            errMessage.value = "Only admin can delete";
+            message.value = "";
         });
 };
 

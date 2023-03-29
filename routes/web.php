@@ -18,3 +18,5 @@ Route::get('/{any?}', [
         return view('welcome');
     }
 ])->where('any', '.*');
+
+Auth::routes();

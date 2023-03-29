@@ -15,8 +15,10 @@ use App\Http\Controllers\ContactController;
 |
 */
 
-Route::resource('contacts', ContactController::class);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::resource('contacts', ContactController::class);
+    Route::get('user', function (Request $request) {
+        return response()->json($request->user());
+    });
 });

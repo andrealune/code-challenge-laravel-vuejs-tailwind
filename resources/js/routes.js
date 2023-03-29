@@ -2,7 +2,28 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
     {
+        path: "/register",
+        name: "register",
+        component: () => import("./pages/Register.vue"),
+        meta: {
+            middleware: "guest",
+            title: `Register`,
+        },
+    },
+    {
+        path: "/login",
+        name: "login",
+        component: () => import("./pages/Login.vue"),
+        meta: {
+            middleware: "guest",
+            title: `Login`,
+        },
+    },
+    {
         path: "/",
+        meta: {
+            middleware: "auth",
+        },
         component: () => import("./layouts/Base.vue"),
         children: [
             {
