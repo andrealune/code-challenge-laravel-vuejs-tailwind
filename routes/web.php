@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,10 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Contact
+Route::get('/contact',[ContactController::class,'index'])->name('contact.index');
+Route::get('/contact/create',[ContactController::class,'create'])->name('contact.create');
+Route::post('/contact',[ContactController::class,'store'])->name('contact.store');
+Route::get('/contact/edit/{id}',[ContactController::class,'edit'])->name('contact.edit');
+Route::post('/contact/edit/{id}',[ContactController::class,'update'])->name('contact.update');
+Route::get('/contact/delete/{id}',[ContactController::class,'destroy'])->name('contact.delete');
