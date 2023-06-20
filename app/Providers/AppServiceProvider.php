@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Repositories\ContactRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
